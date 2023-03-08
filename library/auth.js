@@ -20,8 +20,8 @@ const hashCompare = async (password, hashValue) => {
   }
 };
 
-const createJWT = async (userEmail) => {
-  return await JWT.sign({ userEmail }, "bsdfjkefjkefjkdj", { expiresIn: "2m" });
+const createJWT = async (email) => {
+  return await JWT.sign(email, "bsdfjkefjkefjkdj", { expiresIn: "2m" });
 };
 
 const authentication = async (token) => {
@@ -32,6 +32,7 @@ const authentication = async (token) => {
       validity: true,
     };
   } else {
+   
     return {
       email: decode.email,
       validity: false,

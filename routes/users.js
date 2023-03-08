@@ -101,22 +101,40 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// router.post("/verify-token/:token", async (req, res) => {
+//   const client = MongoClient.connect(dbUrl);
+//   try {
+//     const validity = await authentication(req.params.token);
+//     if (validity.validity === true) {
+//       const db = await client.db("authentication");
+//       const document = await db
+//         .collection("auth")
+//         .updateOne({ email: validity.email }, { $set: { verify: "Y" } });
+
+//       res.send({ message: "User Verified Successfully"});
+//     } else {
+//       res.send({ message: "Token expired" });
+//     }
+//   } catch (error) {
+//     res.send(error);
+//   }
+// });
+
 router.post("/verify-token/:token", async (req, res) => {
-  const client = MongoClient.connect(dbUrl);
+  const client = await MongoClient.connect(dbUrl);
   try {
     const validity = await authentication(req.params.token);
     if (validity.validity === true) {
       const db = await client.db("authentication");
-      await db
+      const document = await db
         .collection("auth")
         .updateOne({ email: validity.email }, { $set: { verify: "Y" } });
-      console.log(document);
-      res.send({ message: "User Verified Successfully" });
+      res.send({ message: "User verified Successfully" });
     } else {
       res.send({ message: "Token expired" });
     }
   } catch (error) {
-    res.send(error);
+    console.log(error);
   }
 });
 
